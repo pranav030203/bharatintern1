@@ -1,0 +1,38 @@
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
+
+# Load the Wine Quality dataset from scikit-learn
+from sklearn.datasets import load_wine
+wine = load_wine()
+data = pd.DataFrame(data=wine.data, columns=wine.feature_names)
+data['quality'] = wine.target
+
+# Assuming you want to classify the wine quality as 'good' (1) or 'not good' (0)
+data['quality'] = (data['quality'] >= 7).astype(int)
+
+# Define the feature columns (X) and the target variable (y)
+X = data.drop('quality', axis=1)
+y = data['quality']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a logistic regression model
+model = LogisticRegression()
+
+# Fit the model to the training data
+model.fit(X_train, y_train)
+
+# Make predictions on the test data
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+
+# Display the model's performance
+print("Accuracy:", accuracy)
+print("Classification Report:\n", report)
